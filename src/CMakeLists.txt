@@ -1,11 +1,5 @@
 ﻿cmake_minimum_required (VERSION 3.8)
 
-if(CMAKE_COMPILER_IS_GNUCXX)
-	set(CMAKE_CXX_FLAGS "-std=c++11 -g -D_DEBUG -O0" ${CMAKE_CXX_FLAGS})
-	message(status "optional:-std=c++11")
-endif(CMAKE_COMPILER_IS_GNUCXX)
-
-
 include_directories(./)
 link_directories(./)
 
