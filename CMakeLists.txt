@@ -8,3 +8,5 @@ endif ()
 project ("nsign-tool")
 
 add_subdirectory ("src")
+
+install(TARGETS nsign)
