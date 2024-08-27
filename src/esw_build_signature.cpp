@@ -1003,7 +1003,7 @@ int create_uart_sign_file()
     btr_boot_chain.num_entries = sign_count;
     fw = fopen(bootchain_bin_path, "wb");
     if (fw == NULL) {
-        printf("error: open file(%s) failed! Please check if the path exists and have writable permission.\r\n",
+        printf("error: open file(%s) failed! Please check if the path exists and has write permission.\r\n",
             bootchain_bin_path);
         return ERR_OPENFILE;
     }
@@ -1121,7 +1121,7 @@ int create_chief_sign_file()
     btr_boot_chain.num_entries = sign_count;
     fw = fopen(chief_boot_path, "wb");
     if (fw == NULL) {
-        printf("error: open file(%s) failed! Please check if the path exists and have writable permission.\r\n",
+        printf("error: open file(%s) failed! Please check if the path exists and has write permission.\r\n",
                 chief_boot_path);
         return ERR_OPENFILE;
     }
@@ -1299,7 +1299,7 @@ static const char* error(int err)
             return "Parse config file failed.";
         } break;
         case ERR_PERMISSION: {
-            return "Not have permissions.";
+            return "Don't have permissions.";
         } break;
     }
     return "Unknown error.";
@@ -1508,7 +1508,7 @@ run:
         return 0;
 
 Failed:
-        printf("\r\nFaid:(%d:%s).\r\n", ret, error(ret));
+        printf("\r\nFailed: (%d:%s).\r\n", ret, error(ret));
         return -1;
     } catch (...) {
         try {
