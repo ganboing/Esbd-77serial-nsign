@@ -892,6 +892,7 @@ RESULT_STATUS binfile_to_fexfile(const char* src, uint32_t base_add, const char*
     uint8_t src_file_remainder;
     uint8_t tmp_data[8];
     uint8_t update_base_addr = 1;
+    size_t read_count;
 
     src_file = fopen(src, "rb");
     if (!src_file) {
@@ -910,7 +911,13 @@ RESULT_STATUS binfile_to_fexfile(const char* src, uint32_t base_add, const char*
     src_file_remainder = (uint8_t)(src_file_length % NUMBER_OF_ONE_LINE);
     hex_for.data = buffer_bin;
     while (cur_file_page < src_file_quotient) {
-        fread(buffer_bin, 1, NUMBER_OF_ONE_LINE, src_file);
+        read_count = fread(buffer_bin, 1, NUMBER_OF_ONE_LINE, src_file);
+        if(read_count < NUMBER_OF_ONE_LINE) {
+            if (ferror(src_file)) {
+                printf("error: read file(%s) failed!\r\n", src);
+                return RES_BIN_FILE_NOT_EXIST;
+            }
+        }
         hex_for.len = NUMBER_OF_ONE_LINE;
         if (update_base_addr == 1) {
             update_base_addr = 0;
@@ -946,7 +953,13 @@ RESULT_STATUS binfile_to_fexfile(const char* src, uint32_t base_add, const char*
         }
     }
     if (src_file_remainder != 0) {
-        fread(buffer_bin, 1, src_file_remainder, src_file);
+        read_count = fread(buffer_bin, 1, src_file_remainder, src_file);
+        if(read_count < src_file_remainder) {
+            if (ferror(src_file)) {
+                printf("error: read file(%s) failed!\r\n", src);
+                return RES_BIN_FILE_NOT_EXIST;
+            }
+        }
         hex_for.addr[0] = (uint8_t)((low_addr & 0xff00) >> 8);
         hex_for.addr[1] = (uint8_t)(low_addr & 0x00ff);
         hex_for.len = src_file_remainder;
@@ -1108,6 +1121,7 @@ int create_chief_sign_file()
     uint64_t len = 0;
     const char* image_path = NULL;
     char image_sign[SIGN_SIZE] = {};
+    size_t read_count;
 
     if (!memcmp(output_path, "default", 7)) {
         printf("output_path=%s.\r\n", chief_boot_path);
@@ -1156,7 +1170,13 @@ int create_chief_sign_file()
         printf("image%d size is %ld,sign_algorithm is %d,offset is 0x%lx\r\n", j, len, boot_chain_entry[j].sign_type,
                boot_chain_entry[j].offset);
         for (i = 0; i < len; i++) {
-            fread(&tmp, 1, 1, fr);
+            read_count = fread(&tmp, 1, 1, fr);
+            if(read_count < 1) {
+                if (ferror(fr)) {
+                    printf("error: read file(%s) failed!\r\n", image_path);
+                    return ERR_READFILE;
+                }
+            }
             fwrite(&tmp, 1, 1, fw);
         }
     }
