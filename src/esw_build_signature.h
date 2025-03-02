@@ -90,6 +90,32 @@ typedef struct __BTR_BOOT_CHAIN_ST {
     BTR_BOOT_CHAIN_ENTRY_T entries[0]; /* entries */
 } BTR_BOOT_CHAIN_T;
 
+typedef struct __attribute__((__packed__)) __BTR_BOOT_CHAIN_SIG_ST {
+    uint32_t magic;
+    uint32_t reserved0;
+    uint64_t link_addr; /* in use for loadable service */
+    uint64_t payload_offset;
+    uint64_t payload_size;  /* size in byte */
+    uint64_t load_addr;     /* where to load the image */
+    uint64_t entry_addr;    /* Entry address of the program and CPU will jump into */
+    uint8_t payload_flags;  /* Payload is encrypted or not */
+    uint8_t digest_mthd;    /* digest algorithm use SHA256 or SM3 */
+    uint8_t encrypted_mthd; /* Payload encrypted algorithm */
+    uint8_t vid;            /* vendor id */
+    uint8_t reserved1;
+    uint8_t lang[3];
+    uint64_t mid;         /* market id */
+    uint8_t payload_type; /* Payload type */
+    uint8_t boot_flags;   /* Boot by SCPU or MCPU */
+    uint8_t reserved2[6];
+    uint64_t devid;     /* device id */
+    uint8_t params[16]; /* Parameters for next boot stage */
+    uint8_t reserved3[16];
+    BTR_LOADABLE_INFO_T load_info;
+    uint32_t reserved4;
+    uint8_t digest[BTR_SHA256_DIGEST_SIZE];
+} BTR_BOOT_CHAIN_SIG_ST;
+
 class generator_signature
 {
  private:
