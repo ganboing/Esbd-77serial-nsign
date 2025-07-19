@@ -65,7 +65,8 @@ int main(int argc, char **argv) {
 			pheader->payload_type, str_payload_type(pheader->payload_type),
 			pheader->boot_flags);
 		char *filename = NULL;
-		asprintf(&filename, "%s.%lx.bin", str_payload_type(entry->payload_type), entry->offset);
+		asprintf(&filename, "%s.%lx-%lx.bin", str_payload_type(entry->payload_type),
+			entry->offset + 0x100, entry->offset + 0x100 + entry->size);
 		FILE *fp = fopen(filename, "w");
 		if (!fp)
 			error(1, errno, "failed to open file %s for writing", filename);
