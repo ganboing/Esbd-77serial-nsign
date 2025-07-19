@@ -22,7 +22,7 @@
 #include <sys/types.h>
 #endif
 
-#define DEBUG_ON 0
+#define DEBUG_ON 1
 #if DEBUG_ON
 #define ndebug(format, ...) printf("%s %s:%5d " format, "[D]", __FUNCTION__, __LINE__, ##__VA_ARGS__)
 #else
